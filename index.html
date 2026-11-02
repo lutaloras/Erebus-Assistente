@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#EDF1EE" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F1815" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F5FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0810" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -19,45 +19,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #EDF1EE;
-  --surface: #F8FAF8;
-  --ink: #14201C;
-  --muted: #5C6B65;
-  --line: #CBD5CF;
-  --primary: #0E6B5A;
-  --on-primary: #F4FBF8;
-  --signal: #D98E14;
-  --on-signal: #1A1204;
-  --user-bg: #DDE6E1;
+  --bg: #F7F5FB;
+  --surface: #FFFFFF;
+  --ink: #0E0B16;
+  --muted: #6A6382;
+  --line: #DDD8EA;
+  --primary: #6D28D9;
+  --on-primary: #FFFFFF;
+  --signal: #0E0B16;
+  --on-signal: #FFFFFF;
+  --user-bg: #ECE7F8;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1815;
-    --surface: #17231F;
-    --ink: #E4EEE9;
-    --muted: #93A59D;
-    --line: #2A3A34;
-    --primary: #4FC7AE;
-    --on-primary: #06231C;
-    --signal: #F0B44C;
-    --on-signal: #1E1400;
-    --user-bg: #1F2E29;
+    --bg: #0A0810;
+    --surface: #15121E;
+    --ink: #F4F2FA;
+    --muted: #9B94B0;
+    --line: #2A2538;
+    --primary: #A78BFA;
+    --on-primary: #12062B;
+    --signal: #FFFFFF;
+    --on-signal: #0A0810;
+    --user-bg: #221D31;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0F1815;
-  --surface: #17231F;
-  --ink: #E4EEE9;
-  --muted: #93A59D;
-  --line: #2A3A34;
-  --primary: #4FC7AE;
-  --on-primary: #06231C;
-  --signal: #F0B44C;
-  --on-signal: #1E1400;
-  --user-bg: #1F2E29;
+  --bg: #0A0810;
+  --surface: #15121E;
+  --ink: #F4F2FA;
+  --muted: #9B94B0;
+  --line: #2A2538;
+  --primary: #A78BFA;
+  --on-primary: #12062B;
+  --signal: #FFFFFF;
+  --on-signal: #0A0810;
+  --user-bg: #221D31;
 }
 
 *, *::before, *::after { box-sizing: inherit; }
@@ -93,9 +93,9 @@ button { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 12px 10px 18px;
-  border-bottom: 1px solid var(--line);
+  padding: 10px 8px 8px 16px;
 }
+.brand { display: flex; align-items: center; gap: 12px; }
 .brand h1 {
   margin: 0;
   font-family: 'Newsreader', Georgia, serif;
@@ -104,18 +104,28 @@ button { font: inherit; color: inherit; }
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
-.status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  font-size: 13px;
-  color: var(--muted);
+.status { margin-top: 2px; font-size: 12.5px; color: var(--muted); }
+
+/* A Erebus: um orbe que muda conforme ela ouve, pensa ou fala */
+.orb {
+  flex: none;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 38%),
+    radial-gradient(circle at 70% 78%, var(--signal) 0, rgba(0,0,0,0) 46%),
+    radial-gradient(circle at 50% 50%, var(--primary) 0, color-mix(in srgb, var(--primary) 55%, #000) 100%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent), 0 0 18px color-mix(in srgb, var(--primary) 35%, transparent);
 }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-.dot[data-s="listening"] { background: var(--signal); }
-.dot[data-s="speaking"] { background: var(--primary); }
-.actions { display: flex; gap: 2px; }
+.orb[data-s="listening"] { filter: brightness(1.35) saturate(1.2); }
+@media (prefers-reduced-motion: no-preference) {
+  .orb[data-s="thinking"] { animation: pulse 1.1s ease-in-out infinite; }
+  .orb[data-s="speaking"] { animation: pulse 1.8s ease-in-out infinite; }
+}
+@keyframes pulse { 50% { transform: scale(1.12); } }
+.actions { display: flex; gap: 0; }
 .icon-btn {
   position: relative;
   width: 44px;
@@ -129,7 +139,7 @@ button { font: inherit; color: inherit; }
   cursor: pointer;
 }
 .icon-btn:hover { background: var(--user-bg); }
-.icon-btn:focus-visible, .chip:focus-visible, .btn:focus-visible, .tick:focus-visible, .del:focus-visible, .send:focus-visible {
+.icon-btn:focus-visible, .chip:focus-visible, .btn:focus-visible, .tick:focus-visible, .del:focus-visible, .send:focus-visible, .copy:focus-visible, .seg button:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
@@ -163,30 +173,71 @@ svg.ico {
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 20px 18px 12px;
+  padding: 12px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
 }
-.msg { max-width: 88%; }
 .msg p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .msg.user {
   align-self: flex-end;
+  max-width: 85%;
   background: var(--user-bg);
-  padding: 10px 14px;
-  border-radius: 18px 18px 6px 18px;
+  padding: 10px 16px;
+  border-radius: 20px 20px 6px 20px;
 }
-.msg.bot {
-  align-self: flex-start;
-  border-left: 2px solid var(--primary);
-  padding-left: 14px;
-  font-family: 'Newsreader', Georgia, serif;
-  font-size: 19px;
-  line-height: 1.55;
+.msg.bot { display: flex; gap: 12px; align-items: flex-start; }
+.msg.bot .orb { width: 26px; height: 26px; margin-top: 2px; box-shadow: none; }
+.msg.bot.alarm .orb { filter: brightness(1.35) saturate(1.2); }
+.msg.bot .col { flex: 1; min-width: 0; }
+.msg.bot .body { font-size: 16.5px; line-height: 1.65; overflow-wrap: anywhere; }
+.body > :first-child { margin-top: 0; }
+.body > :last-child { margin-bottom: 0; }
+.body p { margin: 0 0 0.8em; white-space: normal; }
+.body ul, .body ol { margin: 0 0 0.8em; padding-left: 1.3em; }
+.body li { margin: 0.2em 0; }
+.body strong { font-weight: 600; }
+.body code {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--user-bg);
+  padding: 0.12em 0.4em;
+  border-radius: 6px;
 }
-.msg.bot.alarm { border-left-color: var(--signal); }
+.body pre {
+  margin: 0 0 0.8em;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.body pre code { background: none; padding: 0; font-size: 13.5px; line-height: 1.5; }
+.copy {
+  margin: 4px 0 0 -8px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.copy:hover { color: var(--ink); background: var(--user-bg); }
+.copy svg.ico { width: 17px; height: 17px; }
+.typing { display: inline-flex; gap: 5px; padding: 10px 0; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); opacity: 0.5; }
+@media (prefers-reduced-motion: no-preference) {
+  .typing i { animation: blink 1.2s ease-in-out infinite; }
+  .typing i:nth-child(2) { animation-delay: 0.2s; }
+  .typing i:nth-child(3) { animation-delay: 0.4s; }
+}
+@keyframes blink { 40% { opacity: 1; } }
 
-.empty { margin-block: auto; padding-bottom: 16px; }
+.empty { margin-block: auto; padding-bottom: 12px; text-align: center; }
+.empty .orb { width: 64px; height: 64px; margin: 0 auto 20px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent), 0 0 44px color-mix(in srgb, var(--primary) 40%, transparent); }
 .empty h2 {
   margin: 0 0 8px;
   font-family: 'Newsreader', Georgia, serif;
@@ -195,14 +246,15 @@ svg.ico {
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
-.empty p { margin: 0 0 20px; max-width: 34ch; color: var(--muted); }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.empty p { margin: 0 auto 24px; max-width: 34ch; color: var(--muted); }
+.chips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
 .chip {
   border: 1px solid var(--line);
   background: var(--surface);
-  border-radius: 999px;
-  padding: 9px 14px;
+  border-radius: 16px;
+  padding: 14px;
   font-size: 14.5px;
+  line-height: 1.35;
   cursor: pointer;
 }
 .chip:hover { border-color: var(--primary); }
@@ -219,57 +271,49 @@ svg.ico {
 .live[data-k="t"] { color: var(--ink); }
 
 /* Barra de entrada */
-.composer {
+.composer { padding: 6px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--bg); }
+.box {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px 12px;
-  border-top: 1px solid var(--line);
-  background: var(--bg);
+  align-items: flex-end;
+  gap: 6px;
+  padding: 6px 6px 6px 18px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--surface);
 }
+.box:focus-within { border-color: var(--primary); }
 .field {
   flex: 1;
   min-width: 0;
-  height: 48px;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: var(--surface);
+  max-height: 140px;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
   color: var(--ink);
-  padding: 0 18px;
   font: inherit;
   font-size: 16px;
+  line-height: 24px;
 }
 .field::placeholder { color: var(--muted); }
-.field:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
-.send {
-  flex: none;
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--surface);
-  color: var(--ink);
-  cursor: pointer;
-}
-.send[data-empty="true"] { opacity: 0.45; }
-.mic {
+.send, .mic {
   position: relative;
   flex: none;
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: var(--primary);
-  color: var(--on-primary);
   cursor: pointer;
 }
-.mic svg.ico { width: 26px; height: 26px; }
+.send { background: var(--ink); color: var(--bg); }
+.mic { background: var(--primary); color: var(--on-primary); }
 .mic[data-on="true"] { background: var(--signal); color: var(--on-signal); }
-.mic:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.mic:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.composer[data-has="true"] .mic { display: none; }
+.composer[data-has="false"] .send { display: none; }
 .mic::before, .mic::after {
   content: '';
   position: absolute;
@@ -295,7 +339,7 @@ svg.ico {
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(8, 14, 12, 0.45);
+  background: rgba(6, 4, 12, 0.55);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
@@ -318,10 +362,10 @@ svg.ico {
   visibility: hidden;
   transition: transform 0.25s ease, visibility 0s linear 0.25s;
 }
-body[data-sheet="open"] .backdrop { opacity: 1; pointer-events: auto; }
-body[data-sheet="open"] .sheet { transform: none; visibility: visible; transition: transform 0.25s ease, visibility 0s; }
+body[data-sheet] .backdrop { opacity: 1; pointer-events: auto; }
+body[data-sheet="open"] #sheet, body[data-sheet="settings"] #settings { transform: none; visibility: visible; transition: transform 0.25s ease, visibility 0s; }
 @media (prefers-reduced-motion: reduce) {
-  .backdrop, .sheet, body[data-sheet="open"] .sheet { transition: none; }
+  .backdrop, .sheet, body[data-sheet] .sheet { transition: none; }
 }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; }
 .sheet-head h2 {
@@ -396,14 +440,44 @@ ul.items { list-style: none; margin: 0; padding: 0; }
 }
 .btn:hover { border-color: var(--muted); }
 .btn[data-armed="1"] { border-color: var(--signal); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.fld { display: block; margin: 14px 0 0; font-size: 13.5px; color: var(--muted); }
+.fld input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+.fld input:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.cfgmsg { min-height: 1.4em; margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+.seg { display: flex; gap: 6px; margin-top: 8px; }
+.seg button {
+  flex: 1;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"] { border-color: var(--primary); background: var(--user-bg); }
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div class="brand">
-      <h1>Erebus</h1>
-      <div class="status"><span class="dot" id="dot" data-s="idle"></span><span id="status" role="status">Pronto</span></div>
+      <span class="orb" id="dot" data-s="idle"></span>
+      <div>
+        <h1>Erebus</h1>
+        <div class="status"><span id="status" role="status">Pronto</span></div>
+      </div>
     </div>
     <div class="actions">
       <button class="icon-btn" id="voiceBtn" type="button" aria-pressed="true" aria-label="Desligar a voz do assistente">
@@ -414,34 +488,38 @@ ul.items { list-style: none; margin: 0; padding: 0; }
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
         <span class="badge" id="badge" hidden>0</span>
       </button>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Abrir configurações">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>
+      </button>
     </div>
   </header>
 
   <main id="log" role="log" aria-live="polite" aria-label="Conversa">
     <section class="empty" id="empty">
+      <span class="orb" aria-hidden="true"></span>
       <h2>Oi. Eu sou a Erebus.</h2>
-      <p>Toque no microfone para falar comigo ou digite embaixo.</p>
+      <p>Fale comigo pelo microfone ou digite embaixo.</p>
       <div class="chips">
-        <button class="chip" type="button" data-cmd="Anota comprar pão">Anota comprar pão</button>
+        <button class="chip" type="button" data-cmd="Me explica como funciona um buraco negro">Me explica como funciona um buraco negro</button>
         <button class="chip" type="button" data-cmd="Me lembra de beber água em 10 minutos">Me lembra de beber água em 10 minutos</button>
-        <button class="chip" type="button" data-cmd="Minhas tarefas">Minhas tarefas</button>
-        <button class="chip" type="button" data-cmd="Que horas são?">Que horas são?</button>
+        <button class="chip" type="button" data-cmd="Anota comprar pão">Anota comprar pão</button>
         <button class="chip" type="button" data-cmd="Conta uma piada">Conta uma piada</button>
-        <button class="chip" type="button" data-cmd="Quem é você?">Quem é você?</button>
       </div>
     </section>
   </main>
 
   <div class="live" id="live" hidden></div>
 
-  <div class="composer">
-    <input class="field" id="field" type="text" placeholder="Fale com a Erebus" enterkeyhint="send" autocomplete="off" autocapitalize="sentences" aria-label="Mensagem">
-    <button class="send" id="send" type="button" data-empty="true" aria-label="Enviar">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
-    </button>
-    <button class="mic" id="mic" type="button" data-on="false" aria-pressed="false" aria-label="Falar">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
-    </button>
+  <div class="composer" id="composer" data-has="false">
+    <div class="box">
+      <textarea class="field" id="field" rows="1" placeholder="Fale com a Erebus" enterkeyhint="send" autocomplete="off" autocapitalize="sentences" aria-label="Mensagem"></textarea>
+      <button class="send" id="send" type="button" aria-label="Enviar">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+      </button>
+      <button class="mic" id="mic" type="button" data-on="false" aria-pressed="false" aria-label="Falar">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -466,6 +544,38 @@ ul.items { list-style: none; margin: 0; padding: 0; }
     <button class="btn" id="clearChat" type="button">Limpar conversa</button>
     <button class="btn" id="wipeAll" type="button">Apagar tudo</button>
   </div>
+</aside>
+
+<aside class="sheet" id="settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="sheet-head">
+    <h2 id="settingsTitle">Configurações</h2>
+    <button class="icon-btn" id="closeSettings" type="button" aria-label="Fechar">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <section class="sec">
+    <h3>Cérebro da Erebus</h3>
+    <label class="fld">Endereço do servidor
+      <input id="cfgUrl" type="url" inputmode="url" placeholder="http://192.168.0.106:8080" autocomplete="off" autocapitalize="off" spellcheck="false">
+    </label>
+    <label class="fld">Chave de acesso
+      <input id="cfgKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+    </label>
+    <div class="foot">
+      <button class="btn" id="cfgTest" type="button">Testar conexão</button>
+      <button class="btn primary" id="cfgSave" type="button">Salvar</button>
+    </div>
+    <p class="cfgmsg" id="cfgMsg" role="status"></p>
+  </section>
+  <section class="sec">
+    <h3>Aparência</h3>
+    <div class="seg" id="themeSeg">
+      <button type="button" data-t="auto" aria-pressed="true">Automático</button>
+      <button type="button" data-t="light" aria-pressed="false">Claro</button>
+      <button type="button" data-t="dark" aria-pressed="false">Escuro</button>
+    </div>
+  </section>
+  <p class="note">O endereço e a chave ficam guardados só neste aparelho.</p>
 </aside>
 
 <script>
@@ -547,7 +657,9 @@ ul.items { list-style: none; margin: 0; padding: 0; }
     status: $('status'), dot: $('dot'), voiceBtn: $('voiceBtn'), volOn: $('volOn'), volOff: $('volOff'),
     listBtn: $('listBtn'), badge: $('badge'), sheet: $('sheet'), backdrop: $('backdrop'), closeSheet: $('closeSheet'),
     taskList: $('taskList'), remList: $('remList'), taskCount: $('taskCount'), remCount: $('remCount'),
-    clearChat: $('clearChat'), wipeAll: $('wipeAll')
+    clearChat: $('clearChat'), wipeAll: $('wipeAll'),
+    composer: $('composer'), settingsBtn: $('settingsBtn'), settings: $('settings'), closeSettings: $('closeSettings'),
+    cfgUrl: $('cfgUrl'), cfgKey: $('cfgKey'), cfgTest: $('cfgTest'), cfgSave: $('cfgSave'), cfgMsg: $('cfgMsg'), themeSeg: $('themeSeg')
   };
 
   /* ---------- Utilitários ---------- */
@@ -663,13 +775,70 @@ ul.items { list-style: none; margin: 0; padding: 0; }
   }
 
   /* ---------- Mensagens ---------- */
+  /* Markdown simples: **negrito**, *itálico*, `código`, listas e blocos de código */
+  function inlineMd(t) {
+    return t
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^\w*])\*([^*\n]+)\*(?![\w*])/g, '$1<em>$2</em>');
+  }
+  function md(src) {
+    var esc = String(src).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var parts = esc.split('```'), out = '';
+    parts.forEach(function (part, idx) {
+      if (idx % 2 === 1) { out += '<pre><code>' + part.replace(/^[^\n]*\n/, '').replace(/\n$/, '') + '</code></pre>'; return; }
+      var html = '', list = '', para = [];
+      function endPara() { if (para.length) { html += '<p>' + para.join('<br>') + '</p>'; para = []; } }
+      function endList() { if (list) { html += '</' + list + '>'; list = ''; } }
+      part.split('\n').forEach(function (line) {
+        var ul = line.match(/^\s*[-*•]\s+(.*)$/), ol = line.match(/^\s*\d+[.)]\s+(.*)$/), h = line.match(/^#{1,4}\s+(.*)$/);
+        if (ul || ol) {
+          endPara();
+          var kind = ul ? 'ul' : 'ol';
+          if (list !== kind) { endList(); html += '<' + kind + '>'; list = kind; }
+          html += '<li>' + inlineMd((ul || ol)[1]) + '</li>';
+        } else if (!line.trim()) { endPara(); endList(); }
+        else if (h) { endPara(); endList(); html += '<p><strong>' + inlineMd(h[1]) + '</strong></p>'; }
+        else { endList(); para.push(inlineMd(line)); }
+      });
+      endPara(); endList();
+      out += html;
+    });
+    return out;
+  }
+
+  var COPY_SVG = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  var OK_SVG = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
+  function copyText(t, btn) {
+    function done() { btn.innerHTML = OK_SVG; setTimeout(function () { btn.innerHTML = COPY_SVG; }, 1500); }
+    try { navigator.clipboard.writeText(t).then(done, function () { /* ignora */ }); } catch (e) { /* ignora */ }
+  }
+
   function drawMessage(m) {
     var el = document.createElement('div');
     el.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot') + (m.kind === 'alarm' ? ' alarm' : '');
-    var p = document.createElement('p');
-    p.textContent = m.text;
-    el.appendChild(p);
+    if (m.role === 'user') {
+      var p = document.createElement('p');
+      p.textContent = m.text;
+      el.appendChild(p);
+    } else {
+      var av = document.createElement('span'); av.className = 'orb'; av.setAttribute('aria-hidden', 'true');
+      var col = document.createElement('div'); col.className = 'col';
+      var body = document.createElement('div'); body.className = 'body';
+      if (m.text) body.innerHTML = md(m.text);
+      else body.innerHTML = '<span class="typing" aria-label="Pensando"><i></i><i></i><i></i></span>';
+      col.appendChild(body);
+      if (m.text) {
+        var cb = document.createElement('button');
+        cb.type = 'button'; cb.className = 'copy'; cb.setAttribute('aria-label', 'Copiar resposta'); cb.innerHTML = COPY_SVG;
+        cb.addEventListener('click', function () { copyText(m.text, cb); });
+        col.appendChild(cb);
+      }
+      el.appendChild(av); el.appendChild(col);
+      el._body = body;
+    }
     els.log.appendChild(el);
+    return el;
   }
   function scrollDown() {
     if (els.log.scrollTo) els.log.scrollTo({ top: els.log.scrollHeight, behavior: reduceMotion() ? 'auto' : 'smooth' });
@@ -1053,44 +1222,111 @@ ul.items { list-style: none; margin: 0; padding: 0; }
     url = url.replace(/\/+$/, '');
     try { localStorage.setItem(LLM_KEY, JSON.stringify({ url: url, key: key || '' })); return true; } catch (e) { return false; }
   }
-  var FALLBACK_NO_LLM = 'Isso eu ainda não sei fazer sozinha. Para eu conversar de verdade, me conecte ao meu cérebro: escreva “configurar ia ENDEREÇO CHAVE”. Ou diga “ajuda” para ver o que já sei fazer.';
+  var FALLBACK_NO_LLM = 'Para conversar de verdade, preciso do endereço do meu cérebro. Toque no ícone de configurações, no topo, e preencha o endereço e a chave.';
+  var busy = false;
 
   function askModel(userText) {
     var cfg = llmCfg();
     if (!cfg) { addMessage('bot', FALLBACK_NO_LLM, { speak: false }); return; }
+    if (busy) { addMessage('bot', 'Ainda estou pensando na pergunta anterior. Um instante.', { speak: false }); return; }
+    busy = true;
     var hist = state.messages.slice(-11, -1).map(function (m) {
       return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text };
     });
     var body = {
       messages: [{ role: 'system', content: CONFIG.persona }].concat(hist, [{ role: 'user', content: userText }]),
-      max_tokens: 300, temperature: 0.7, stream: false
+      max_tokens: 300, temperature: 0.7, stream: true
     };
     var ctl = ('AbortController' in window) ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 90000);
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 120000);
+    var live = drawMessage({ role: 'bot', text: '' });
+    scrollDown();
     setStatus('thinking');
     var headers = { 'Content-Type': 'application/json' };
     if (cfg.key) headers['Authorization'] = 'Bearer ' + cfg.key;
+    var text = '', err = null;
+
+    function onData(d) {
+      if (!d || d === '[DONE]') return;
+      try {
+        var j = JSON.parse(d);
+        var c = j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content;
+        if (c) { text += c; live._body.innerHTML = md(text); els.log.scrollTop = els.log.scrollHeight; }
+      } catch (e) { /* pedaço incompleto */ }
+    }
+    function onLines(chunk) {
+      chunk.forEach(function (l) { l = l.trim(); if (l.indexOf('data:') === 0) onData(l.slice(5).trim()); });
+    }
+
     fetch(cfg.url + '/v1/chat/completions', { method: 'POST', headers: headers, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
       .then(function (r) {
         if (r.status === 401) throw new Error('chave');
         if (!r.ok) throw new Error('http ' + r.status);
-        return r.json();
+        if (!r.body || !r.body.getReader) return r.text().then(function (t) { onLines(t.split('\n')); });
+        var reader = r.body.getReader(), dec = new TextDecoder(), buf = '';
+        function pump() {
+          return reader.read().then(function (x) {
+            if (x.done) { if (buf) onLines([buf]); return; }
+            buf += dec.decode(x.value, { stream: true });
+            var lines = buf.split('\n'); buf = lines.pop();
+            onLines(lines);
+            return pump();
+          });
+        }
+        return pump();
       })
-      .then(function (j) {
-        var t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-        t = (t || '').trim();
+      .catch(function (e) { err = e; })
+      .then(function () {
+        clearTimeout(timer);
+        busy = false;
         if (status === 'thinking') setStatus('idle');
-        addMessage('bot', t || 'Fiquei sem palavras. Pode repetir?');
-      })
-      .catch(function (e) {
-        if (status === 'thinking') setStatus('idle');
-        var msg = (e && e.message === 'chave')
-          ? 'Meu cérebro recusou a chave. Confira com “configurar ia ENDEREÇO CHAVE”.'
+        if (live.parentNode) live.parentNode.removeChild(live);
+        text = text.trim();
+        if (text) { addMessage('bot', text); return; }
+        var msg = (err && err.message === 'chave')
+          ? 'Meu cérebro recusou a chave. Confira em Configurações.'
           : 'Não consegui falar com o meu cérebro agora. Ele está ligado e na mesma rede?';
         addMessage('bot', msg, { speak: false });
-      })
-      .then(function () { clearTimeout(timer); });
+      });
   }
+
+  /* ---------- Configurações ---------- */
+  function cfgSay(t) { els.cfgMsg.textContent = t; }
+  function openSettings() {
+    var c = llmCfg();
+    els.cfgUrl.value = c ? c.url : '';
+    els.cfgKey.value = c ? c.key : '';
+    cfgSay('');
+    document.body.dataset.sheet = 'settings';
+    els.closeSettings.focus();
+  }
+  function cfgValues() { return { url: els.cfgUrl.value.trim().replace(/\/+$/, ''), key: els.cfgKey.value.trim() }; }
+  function cfgTest() {
+    var v = cfgValues();
+    if (!v.url) { cfgSay('Escreva o endereço do servidor.'); return; }
+    cfgSay('Testando…');
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var tm = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    var h = {}; if (v.key) h['Authorization'] = 'Bearer ' + v.key;
+    fetch(v.url + '/v1/models', { headers: h, signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { cfgSay(r.ok ? 'Conectado. Meu cérebro respondeu.' : (r.status === 401 ? 'O servidor respondeu, mas recusou a chave.' : 'O servidor respondeu com erro ' + r.status + '.')); })
+      .catch(function () { cfgSay('Não consegui chegar no servidor. Confira o endereço e se você está na mesma rede.'); })
+      .then(function () { clearTimeout(tm); });
+  }
+  function cfgSave() {
+    var v = cfgValues();
+    if (!v.url) { try { localStorage.removeItem(LLM_KEY); } catch (e) { /* ignora */ } cfgSay('Configuração removida.'); return; }
+    cfgSay(llmSave(v.url, v.key) ? 'Salvo.' : 'Não consegui guardar neste navegador.');
+  }
+  var THEME_KEY = 'assistente:theme';
+  function applyTheme(t) {
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.removeAttribute('data-theme');
+    Array.prototype.slice.call(els.themeSeg.querySelectorAll('button')).forEach(function (b) {
+      b.setAttribute('aria-pressed', String((b.getAttribute('data-t') || 'auto') === (t === 'light' || t === 'dark' ? t : 'auto')));
+    });
+  }
+  function loadTheme() { var t = 'auto'; try { t = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) { /* ignora */ } applyTheme(t); }
 
   function submit(input) {
     var t = (input || '').trim();
@@ -1157,7 +1393,11 @@ ul.items { list-style: none; margin: 0; padding: 0; }
   function stopListening() { try { if (rec) rec.stop(); } catch (e) { /* ignora */ } }
 
   /* ---------- Eventos ---------- */
-  function syncSend() { els.send.dataset.empty = String(els.field.value.trim() === ''); }
+  function syncSend() {
+    els.composer.dataset.has = String(els.field.value.trim() !== '');
+    els.field.style.height = 'auto';
+    els.field.style.height = Math.min(els.field.scrollHeight, 140) + 'px';
+  }
   function sendTyped() {
     var v = els.field.value;
     if (!v.trim()) return;
@@ -1175,7 +1415,18 @@ ul.items { list-style: none; margin: 0; padding: 0; }
   els.listBtn.addEventListener('click', openSheet);
   els.closeSheet.addEventListener('click', closeSheet);
   els.backdrop.addEventListener('click', closeSheet);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.dataset.sheet === 'open') closeSheet(); });
+  els.settingsBtn.addEventListener('click', openSettings);
+  els.closeSettings.addEventListener('click', function () { delete document.body.dataset.sheet; els.settingsBtn.focus(); });
+  els.cfgTest.addEventListener('click', cfgTest);
+  els.cfgSave.addEventListener('click', cfgSave);
+  Array.prototype.slice.call(els.themeSeg.querySelectorAll('button')).forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-t');
+      try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* ignora */ }
+      applyTheme(t);
+    });
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.dataset.sheet) closeSheet(); });
   Array.prototype.slice.call(document.querySelectorAll('.chip')).forEach(function (c) {
     c.addEventListener('click', function () { submit(c.getAttribute('data-cmd')); });
   });
@@ -1201,6 +1452,8 @@ ul.items { list-style: none; margin: 0; padding: 0; }
 
   /* ---------- Início ---------- */
   load();
+  loadTheme();
+  syncSend();
   applyVoiceUI();
   renderAll();
   updateBadge();

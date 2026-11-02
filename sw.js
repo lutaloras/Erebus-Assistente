@@ -1,7 +1,7 @@
 // Erebus — service worker.
 // Guarda o app no aparelho para abrir rápido e funcionar offline.
 // Ao mudar qualquer arquivo do app, aumente o número da versão abaixo.
-const CACHE = 'erebus-v2';
+const CACHE = 'erebus-v4';
 const SHELL = [
   './',
   './index.html',
