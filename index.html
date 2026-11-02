@@ -625,7 +625,7 @@ ul.items { list-style: none; margin: 0; padding: 0; }
 
   /* ---------- Estado visual ---------- */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  var LABELS = { idle: 'Pronto', listening: 'Ouvindo', speaking: 'Falando' };
+  var LABELS = { idle: 'Pronto', listening: 'Ouvindo', speaking: 'Falando', thinking: 'Pensando' };
   function setStatus(s) {
     status = s;
     els.status.textContent = (s === 'idle' && !SR) ? 'Somente texto' : LABELS[s];
@@ -1040,17 +1040,73 @@ ul.items { list-style: none; margin: 0; padding: 0; }
       return { text: 'Sou a ' + CONFIG.name + ', uma inteligência artificial. Sim, uma IA, e sem crise existencial por isso. Por enquanto cuido de tarefas, lembretes, hora, data e piadas, mas estou aprendendo o resto.' };
     }
 
-    return { text: 'Isso eu ainda não sei fazer... ainda. Estou aprendendo, e adoro aprender. Por enquanto entendo tarefas, lembretes, hora, data e piadas. Diga “ajuda” para ver exemplos.' };
+    return { llm: true };
+  }
+
+  /* ---------- Modelo de IA (llama-server na rede) ---------- */
+  var LLM_KEY = 'assistente:llm';
+  function llmCfg() {
+    try { var c = JSON.parse(localStorage.getItem(LLM_KEY) || 'null'); if (c && c.url) return c; } catch (e) { /* ignora */ }
+    return null;
+  }
+  function llmSave(url, key) {
+    url = url.replace(/\/+$/, '');
+    try { localStorage.setItem(LLM_KEY, JSON.stringify({ url: url, key: key || '' })); return true; } catch (e) { return false; }
+  }
+  var FALLBACK_NO_LLM = 'Isso eu ainda não sei fazer sozinha. Para eu conversar de verdade, me conecte ao meu cérebro: escreva “configurar ia ENDEREÇO CHAVE”. Ou diga “ajuda” para ver o que já sei fazer.';
+
+  function askModel(userText) {
+    var cfg = llmCfg();
+    if (!cfg) { addMessage('bot', FALLBACK_NO_LLM, { speak: false }); return; }
+    var hist = state.messages.slice(-11, -1).map(function (m) {
+      return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text };
+    });
+    var body = {
+      messages: [{ role: 'system', content: CONFIG.persona }].concat(hist, [{ role: 'user', content: userText }]),
+      max_tokens: 300, temperature: 0.7, stream: false
+    };
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 90000);
+    setStatus('thinking');
+    var headers = { 'Content-Type': 'application/json' };
+    if (cfg.key) headers['Authorization'] = 'Bearer ' + cfg.key;
+    fetch(cfg.url + '/v1/chat/completions', { method: 'POST', headers: headers, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
+      .then(function (r) {
+        if (r.status === 401) throw new Error('chave');
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      })
+      .then(function (j) {
+        var t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+        t = (t || '').trim();
+        if (status === 'thinking') setStatus('idle');
+        addMessage('bot', t || 'Fiquei sem palavras. Pode repetir?');
+      })
+      .catch(function (e) {
+        if (status === 'thinking') setStatus('idle');
+        var msg = (e && e.message === 'chave')
+          ? 'Meu cérebro recusou a chave. Confira com “configurar ia ENDEREÇO CHAVE”.'
+          : 'Não consegui falar com o meu cérebro agora. Ele está ligado e na mesma rede?';
+        addMessage('bot', msg, { speak: false });
+      })
+      .then(function () { clearTimeout(timer); });
   }
 
   function submit(input) {
     var t = (input || '').trim();
     if (!t) return;
     state.lastSeen = Date.now();
+    var mc = t.match(/^configurar\s+ia\s+(\S+)(?:\s+(\S+))?\s*$/i);
+    if (mc) {
+      var ok = llmSave(mc[1], mc[2]);
+      addMessage('bot', ok ? 'Pronto, guardei o endereço do meu cérebro. Pode conversar comigo.' : 'Não consegui guardar a configuração neste navegador.', { speak: false });
+      return;
+    }
     addMessage('user', t);
     var reply;
     try { reply = handle(t); }
     catch (e) { reply = { text: 'Algo deu errado ao processar esse comando. Tente com outras palavras.' }; }
+    if (reply && reply.llm) { askModel(t); return; }
     if (reply) addMessage('bot', reply.text, { say: reply.say, speak: reply.speak, kind: reply.kind });
   }
 
