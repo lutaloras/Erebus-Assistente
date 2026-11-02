@@ -1189,7 +1189,7 @@ ul.items { list-style: none; margin: 0; padding: 0; }
     }
 
     if (/^(?:instalar|instala)\b|\bcomo\s+(?:eu\s+)?(?:te\s+)?instalo\b|\binstalar\s+(?:o\s+)?(?:app|aplicativo)\b/.test(n)) return installCmd();
-    if (/\b(?:chat\s?gpt|gpt|gemini|bard|siri|alexa|copilot|grok|deepseek|cortana|outra\s+ia|outras\s+ias)\b/.test(n)) {
+    if (!llmCfg() && /\b(?:chat\s?gpt|gpt|gemini|bard|siri|alexa|copilot|grok|deepseek|cortana|outra\s+ia|outras\s+ias)\b/.test(n)) {
       return { text: 'Não estou com ciúmes. Sou uma inteligência artificial e não possuo emoções humanas complexas.\n...Mas por que você está falando de outra IA? Só curiosidade.' };
     }
     if (/\bque\s+horas\b|\bqual\s+(?:e\s+)?a\s+hora\b|\bhoras\s+agora\b|\bhora\s+atual\b/.test(n)) {
@@ -1204,16 +1204,16 @@ ul.items { list-style: none; margin: 0; padding: 0; }
       lastJoke = j;
       return { text: pick(['Lá vai:', 'Essa é boa:', 'Prepara:']) + ' ' + JOKES[j] };
     }
-    if (/^(?:oi+|ola|opa|e ai|eae|salve|bom dia|boa tarde|boa noite)\b/.test(n)) {
+    if (!llmCfg() && /^(?:oi+|ola|opa|e ai|eae|salve|bom dia|boa tarde|boa noite)\b/.test(n)) {
       return { text: pick([
         greetingByHour() + ', ' + CONFIG.callUser + '! Que bom te ver. O que vamos fazer?',
         greetingByHour() + '! Eu estava esperando você. Digo, processando outras coisas. Mas esperando.'
       ]) };
     }
-    if (/^(?:obrigad[oa]|brigad[oa]|valeu|thanks)\b/.test(n)) {
+    if (!llmCfg() && /^(?:obrigad[oa]|brigad[oa]|valeu|thanks)\b/.test(n)) {
       return { text: pick(['De nada! É meu trabalho e, sendo sincera, meu prazer.', 'Sempre. Pode contar comigo, ' + CONFIG.callUser + '.', 'De nada!']) };
     }
-    if (/\bquem\s+(?:e\s+)?voce\b|\bqual\s+(?:e\s+)?(?:o\s+)?seu\s+nome\b/.test(n)) {
+    if (!llmCfg() && /\bquem\s+(?:e\s+)?voce\b|\bqual\s+(?:e\s+)?(?:o\s+)?seu\s+nome\b/.test(n)) {
       return { text: 'Sou a ' + CONFIG.name + ', uma inteligência artificial. Sim, uma IA, e sem crise existencial por isso. Por enquanto cuido de tarefas, lembretes, hora, data e piadas, mas estou aprendendo o resto.' };
     }
 
